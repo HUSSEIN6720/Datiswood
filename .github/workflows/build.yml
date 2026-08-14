@@ -40,8 +40,7 @@ jobs:
       - name: Build APK with Flet
         run: |
           flutter config --no-analytics
-          # اگر اسم فایل main.py نیست، جلوی دستور زیر اسم دقیق فایل یا مسیر آن را بنویسید
-          yes | flet build apk main.py --verbose
+          yes | flet build apk . --verbose
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
