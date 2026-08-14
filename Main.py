@@ -104,7 +104,7 @@ def main(page: ft.Page):
         ft.Row([prod_name]),
         ft.Row([prod_qty, prod_price]),
         ft.Row([prod_notes]),
-        ft.ElevatedButton("ثبت در سیستم", icon=ft.icons.ADD, on_click=save_production, style=ft.ButtonStyle(bgcolor=ft.colors.BLUE_700, color="white")),
+        ft.ElevatedButton("ثبت در سیستم", icon=ft.Icons.ADD, on_click=save_production, style=ft.ButtonStyle(bgcolor=ft.colors.BLUE_700, color="white")),
         ft.Divider(),
         ft.Text("آخرین تولیدات ثبت شده:", weight=ft.FontWeight.BOLD),
         ft.Container(content=prod_list_view, height=250)
