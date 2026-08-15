@@ -4,13 +4,13 @@ def main(page: ft.Page):
     # تنظیمات صفحه اصلی
     page.title = "داتیس وود - مدیریت فاکتور"
     page.theme_mode = "light"
-    page.rtl = True  # راست‌چین برای زبان فارسی
+    page.rtl = True
     page.scroll = "auto"
     page.padding = 15
 
-    # ۱. لوگو و سربرگ اصلی (استفاده از "contain" به جای ft.ImageFit.CONTAIN)
+    # ۱. لوگو و سربرگ اصلی - آدرس اصلاح شد
     logo = ft.Image(
-        src="logo.jpg",
+        src="assets/logo.jpg", 
         width=160,
         height=90,
         fit="contain"
@@ -99,7 +99,7 @@ def main(page: ft.Page):
 
         dialog = ft.AlertDialog(
             title=ft.Column([
-                ft.Image(src="logo.jpg", width=120, fit="contain"),
+                ft.Image(src="assets/logo.jpg", width=120, fit="contain"), # آدرس اصلاح شد
                 ft.Text("فاکتور فروش داتیس وود", size=16, weight="bold"),
                 ft.Text(f"مشتری: {customer_name.value or 'آزاد'}", size=13),
                 ft.Divider()
