@@ -3,38 +3,38 @@ import flet as ft
 def main(page: ft.Page):
     # تنظیمات صفحه اصلی
     page.title = "داتیس وود - مدیریت فاکتور"
-    page.theme_mode = ft.ThemeMode.LIGHT
+    page.theme_mode = "light"
     page.rtl = True  # راست‌چین برای زبان فارسی
-    page.scroll = ft.ScrollMode.AUTO
+    page.scroll = "auto"
     page.padding = 15
 
-    # ۱. لوگو و سربرگ اصلی
+    # ۱. لوگو و سربرگ اصلی (استفاده از "contain" به جای ft.ImageFit.CONTAIN)
     logo = ft.Image(
         src="logo.jpg",
         width=160,
         height=90,
-        fit=ft.ImageFit.CONTAIN
+        fit="contain"
     )
 
     header = ft.Column(
         controls=[
             logo,
-            ft.Text("صنایع چوب داتیس وود", size=20, weight=ft.FontWeight.BOLD, color="green800"),
+            ft.Text("صنایع چوب داتیس وود", size=20, weight="bold", color="green800"),
             ft.Text("سیستم صدور و ثبت فاکتور فروش", size=13, color="grey700"),
             ft.Divider()
         ],
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        horizontal_alignment="center"
     )
 
     # ۲. ورودی‌های اطلاعات فاکتور
     customer_name = ft.TextField(label="نام مشتری", width=320, height=48)
     item_name = ft.TextField(label="نام کالا / محصول", width=320, height=48)
-    item_price = ft.TextField(label="قیمت (تومان)", width=320, height=48, keyboard_type=ft.KeyboardType.NUMBER)
+    item_price = ft.TextField(label="قیمت (تومان)", width=320, height=48, keyboard_type="number")
 
     # لیست نگهدارنده داده‌ها
     items_list = []
     invoice_items_ui = ft.Column()
-    total_price_text = ft.Text("جمع کل: ۰ تومان", size=16, weight=ft.FontWeight.BOLD, color="green900")
+    total_price_text = ft.Text("جمع کل: ۰ تومان", size=16, weight="bold", color="green900")
 
     # تابع به‌روزرسانی نمایش لیست و جمع کل
     def update_invoice_ui():
@@ -46,10 +46,10 @@ def main(page: ft.Page):
                 ft.Container(
                     content=ft.Row(
                         controls=[
-                            ft.Text(f"{idx + 1}. {item['name']}", weight=ft.FontWeight.BOLD),
+                            ft.Text(f"{idx + 1}. {item['name']}", weight="bold"),
                             ft.Text(f"{item['price']:,} تومان"),
                         ],
-                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+                        alignment="space_between"
                     ),
                     padding=10,
                     bgcolor="grey100",
@@ -89,27 +89,27 @@ def main(page: ft.Page):
 
         total = sum(i["price"] for i in items_list)
         preview_rows = [
-            ft.Row([ft.Text("کالا", weight="bold"), ft.Text("مبلغ (تومان)", weight="bold")], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+            ft.Row([ft.Text("کالا", weight="bold"), ft.Text("مبلغ (تومان)", weight="bold")], alignment="space_between"),
             ft.Divider()
         ]
         for idx, item in enumerate(items_list):
             preview_rows.append(
-                ft.Row([ft.Text(f"{idx+1}. {item['name']}"), ft.Text(f"{item['price']:,}")], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
+                ft.Row([ft.Text(f"{idx+1}. {item['name']}"), ft.Text(f"{item['price']:,}")], alignment="space_between")
             )
 
         dialog = ft.AlertDialog(
             title=ft.Column([
-                ft.Image(src="logo.jpg", width=120, fit=ft.ImageFit.CONTAIN),
+                ft.Image(src="logo.jpg", width=120, fit="contain"),
                 ft.Text("فاکتور فروش داتیس وود", size=16, weight="bold"),
                 ft.Text(f"مشتری: {customer_name.value or 'آزاد'}", size=13),
                 ft.Divider()
-            ], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+            ], horizontal_alignment="center"),
             content=ft.Column(
                 controls=preview_rows + [
                     ft.Divider(),
-                    ft.Row([ft.Text("مبلغ قابل پرداخت:", weight="bold"), ft.Text(f"{total:,} تومان", weight="bold", color="green800")], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
+                    ft.Row([ft.Text("مبلغ قابل پرداخت:", weight="bold"), ft.Text(f"{total:,} تومان", weight="bold", color="green800")], alignment="space_between")
                 ],
-                scroll=ft.ScrollMode.AUTO,
+                scroll="auto",
                 height=250
             ),
             actions=[
@@ -147,14 +147,14 @@ def main(page: ft.Page):
                 customer_name,
                 item_name,
                 item_price,
-                ft.Row([add_button, clear_button], alignment=ft.MainAxisAlignment.CENTER),
+                ft.Row([add_button, clear_button], alignment="center"),
                 ft.Divider(),
-                ft.Text("آیتم‌های فاکتور فعلی:", weight=ft.FontWeight.BOLD, size=15),
+                ft.Text("آیتم‌های فاکتور فعلی:", weight="bold", size=15),
                 invoice_items_ui,
                 ft.Container(content=total_price_text, padding=10),
                 print_button
             ],
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+            horizontal_alignment="center"
         )
     )
 
