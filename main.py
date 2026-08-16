@@ -84,20 +84,37 @@ def main(page: ft.Page):
     ], horizontal_alignment="center")
 
     # ---------------------------------------------------------
-    # تب ۲: ورودی و تولید روزانه
+    # تب ۲: ورودی و تولید روزانه (با قابلیت انتخاب سازنده)
     # ---------------------------------------------------------
     daily_title = ft.TextField(label="شرح فعالیت / تولید روزانه", width=300, height=45)
     daily_qty = ft.TextField(label="تعداد / مقدار", width=300, height=45, keyboard_type="number")
+    
+    # منوی کشویی انتخاب سازنده
+    maker_dropdown = ft.Dropdown(
+        label="سازنده / استادکار",
+        width=300,
+        options=[
+            ft.dropdown.Option("حسین"),
+            ft.dropdown.Option("محمد"),
+            ft.dropdown.Option("سایر / کارگاه"),
+        ],
+        value="حسین"
+    )
+
     daily_list_ui = ft.Column()
 
     def add_daily_entry(e):
         if daily_title.value:
             q = daily_qty.value or "۱"
+            maker = maker_dropdown.value or "مشخص نشده"
             daily_list_ui.controls.append(
                 ft.Container(
                     content=ft.Row([
-                        ft.Text(daily_title.value, weight="bold"),
-                        ft.Text(f"تعداد: {q}")
+                        ft.Column([
+                            ft.Text(daily_title.value, weight="bold"),
+                            ft.Text(f"سازنده: {maker}", size=12, color="blueGrey700")
+                        ]),
+                        ft.Text(f"تعداد: {q}", weight="bold")
                     ], alignment="space_between"),
                     padding=8, bgcolor="blue50", border_radius=6
                 )
@@ -107,7 +124,7 @@ def main(page: ft.Page):
             page.update()
 
     tab_daily = ft.Column([
-        daily_title, daily_qty,
+        daily_title, daily_qty, maker_dropdown,
         ft.ElevatedButton("ثبت ورودی روزانه", on_click=add_daily_entry, style=ft.ButtonStyle(bgcolor="blue", color="white")),
         ft.Divider(),
         ft.Text("گزارش تولیدات امروز:", weight="bold"),
