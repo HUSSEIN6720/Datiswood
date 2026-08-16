@@ -1,6 +1,7 @@
 [app]
 name = "DatisWood"
 title = "داتیس وود"
+assets_dir = "assets"
 
 [android]
 icon = "assets/logo.png"
