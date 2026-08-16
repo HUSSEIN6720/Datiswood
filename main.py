@@ -8,9 +8,9 @@ def main(page: ft.Page):
     page.scroll = "auto"
     page.padding = 15
 
-    # ۱. لوگو و سربرگ اصلی - آدرس اصلاح شد
+    # ۱. لوگو و سربرگ اصلی (استفاده از فایل png)
     logo = ft.Image(
-        src="assets/logo.jpg", 
+        src="assets/logo.png",
         width=160,
         height=90,
         fit="contain"
@@ -99,7 +99,7 @@ def main(page: ft.Page):
 
         dialog = ft.AlertDialog(
             title=ft.Column([
-                ft.Image(src="assets/logo.jpg", width=120, fit="contain"), # آدرس اصلاح شد
+                ft.Image(src="assets/logo.png", width=120, fit="contain"),
                 ft.Text("فاکتور فروش داتیس وود", size=16, weight="bold"),
                 ft.Text(f"مشتری: {customer_name.value or 'آزاد'}", size=13),
                 ft.Divider()
@@ -118,23 +118,23 @@ def main(page: ft.Page):
         )
         page.open(dialog)
 
-    # دکمه‌ها
+    # دکمه‌ها (حذف پارامتر text= جهت رفع خطای TypeError)
     add_button = ft.ElevatedButton(
-        text="افزودن به فاکتور",
+        "افزودن به فاکتور",
         icon="add",
         on_click=add_item_click,
         style=ft.ButtonStyle(color="white", bgcolor="green")
     )
 
     print_button = ft.ElevatedButton(
-        text="پیش‌نمایش و چاپ فاکتور",
+        "پیش‌نمایش و چاپ فاکتور",
         icon="print",
         on_click=show_print_preview,
         style=ft.ButtonStyle(color="white", bgcolor="blue")
     )
 
     clear_button = ft.OutlinedButton(
-        text="فاکتور جدید",
+        "فاکتور جدید",
         icon="delete",
         on_click=clear_invoice
     )
