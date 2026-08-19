@@ -28,7 +28,7 @@ def main(page: ft.Page):
         value="حسین"
     )
     prod_date = ft.TextField(label="تاریخ تولید", value=datetime.now().strftime("%Y/%m/%d"), width=310, height=48)
-    prod_qty = ft.TextField(label="مقدار / تعداد تولید", width=310, height=48, keyboard_type="number")
+    prod_qty = ft.TextField(label="مقدار / تعداد تولید", width=310, height=48, keyboard_type=ft.KeyboardType.NUMBER)
     prod_list_ui = ft.Column()
 
     def add_production(e):
@@ -49,7 +49,7 @@ def main(page: ft.Page):
                                 ft.Text(f"{item} ({qty} عدد)", weight="bold"),
                                 ft.Text(f"سازنده: {maker} | تاریخ: {date}", size=11, color="grey700")
                             ]),
-                            ft.Icon(name="check_circle", color="green")
+                            ft.Icon(ft.icons.CHECK_CIRCLE, color="green")
                         ], alignment="space_between"),
                         padding=8, bgcolor="green50", border_radius=6
                     )
@@ -98,8 +98,8 @@ def main(page: ft.Page):
     # ۳. فروش و فاکتور
     sale_customer = ft.TextField(label="نام مشتری", width=310, height=48)
     sale_item = ft.TextField(label="نام کالا", width=310, height=48)
-    sale_qty = ft.TextField(label="تعداد", width=310, height=48, keyboard_type="number")
-    sale_price = ft.TextField(label="مبلغ کل (تومان)", width=310, height=48, keyboard_type="number")
+    sale_qty = ft.TextField(label="تعداد", width=310, height=48, keyboard_type=ft.KeyboardType.NUMBER)
+    sale_price = ft.TextField(label="مبلغ کل (تومان)", width=310, height=48, keyboard_type=ft.KeyboardType.NUMBER)
     sale_payment_type = ft.Dropdown(
         label="نوع تسویه مالی",
         width=310,
@@ -117,7 +117,7 @@ def main(page: ft.Page):
         if sale_customer.value and sale_item.value and sale_price.value:
             try:
                 qty = int(sale_qty.value or 1)
-                price = int(sale_price.value.replace(",", ""))
+                price = int((sale_price.value or "0").replace(",", ""))
                 item = sale_item.value.strip()
                 customer = sale_customer.value
                 p_type = sale_payment_type.value
@@ -132,11 +132,15 @@ def main(page: ft.Page):
                                 ft.Text(f"مشتری: {customer} | {item} ({qty} عدد)", weight="bold"),
                                 ft.Text(f"تسویه: {p_type} | مبلغ: {price:,} تومان", size=12, color="blue800")
                             ]),
-                            ft.Icon(name="shopping_cart", color="blue")
+                            ft.Icon(ft.icons.SHOPPING_CART, color="blue")
                         ], alignment="space_between"),
                         padding=8, bgcolor="blue50", border_radius=6
                     )
                 )
+                sale_customer.value = ""
+                sale_item.value = ""
+                sale_qty.value = ""
+                sale_price.value = ""
                 update_inventory_ui()
                 update_analytics_ui()
                 page.update()
@@ -196,14 +200,14 @@ def main(page: ft.Page):
         value="محمد"
     )
     purchase_item = ft.TextField(label="شرح خرید / قطعه / چوب", width=310, height=48)
-    purchase_cost = ft.TextField(label="مبلغ خرید (تومان)", width=310, height=48, keyboard_type="number")
+    purchase_cost = ft.TextField(label="مبلغ خرید (تومان)", width=310, height=48, keyboard_type=ft.KeyboardType.NUMBER)
     purchase_date = ft.TextField(label="تاریخ خرید", value=datetime.now().strftime("%Y/%m/%d"), width=310, height=48)
     purchase_list_ui = ft.Column()
 
     def add_purchase(e):
         if purchase_item.value and purchase_cost.value:
             try:
-                cost = int(purchase_cost.value.replace(",", ""))
+                cost = int((purchase_cost.value or "0").replace(",", ""))
                 buyer = purchaser.value
                 item = purchase_item.value
                 date = purchase_date.value
@@ -216,7 +220,7 @@ def main(page: ft.Page):
                                 ft.Text(f"{item} (خریدار: {buyer})", weight="bold"),
                                 ft.Text(f"تاریخ: {date} | هزینه: {cost:,} تومان", size=11, color="red800")
                             ]),
-                            ft.Icon(name="build", color="orange")
+                            ft.Icon(ft.icons.BUILD, color="orange")
                         ], alignment="space_between"),
                         padding=8, bgcolor="orange50", border_radius=6
                     )
@@ -273,16 +277,25 @@ def main(page: ft.Page):
     update_inventory_ui()
     update_analytics_ui()
 
-    # ایجاد ساختار اصلی تب‌ها بدون هیچ‌گونه پارامتر غیرمجاز
+    # تعریف ساختار تب‌ها به روش استاندارد برای جلوگیری از خطای نسخه فلت
+    t1 = ft.Tab(text="تولید روزانه", icon=ft.icons.PRECISION_MANUFACTURING)
+    t1.content = tab_production
+
+    t2 = ft.Tab(text="انبار", icon=ft.icons.INVENTORY)
+    t2.content = tab_inventory
+
+    t3 = ft.Tab(text="فروش", icon=ft.icons.SHOPPING_CART)
+    t3.content = tab_sales
+
+    t4 = ft.Tab(text="خرید کارگاه", icon=ft.icons.BUILD)
+    t4.content = tab_purchase
+
+    t5 = ft.Tab(text="گزارشات", icon=ft.icons.BAR_CHART)
+    t5.content = tab_analytics
+
     tabs = ft.Tabs(
         selected_index=0,
-        tabs=[
-            ft.Tab(label="تولید روزانه", icon="precision_manufacturing", content=tab_production),
-            ft.Tab(label="انبار", icon="inventory", content=tab_inventory),
-            ft.Tab(label="فروش", icon="shopping_cart", content=tab_sales),
-            ft.Tab(label="خرید کارگاه", icon="build", content=tab_purchase),
-            ft.Tab(label="گزارشات", icon="bar_chart", content=tab_analytics),
-        ],
+        tabs=[t1, t2, t3, t4, t5],
         expand=True
     )
 
