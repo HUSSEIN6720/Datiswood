@@ -8,18 +8,14 @@ def main(page: ft.Page):
     page.scroll = "auto"
     page.padding = 10
 
-    # لوگوی اصلی برنامه
     logo = ft.Image(src="assets/logo.png", width=110, height=65, fit="contain")
 
-    # دادگان متغیر در حافظه (پایگاه داده موقت)
-    inventory_data = {}  # انبار کالاها: {"نام کالا": تعداد}
-    production_logs = [] # گزارش تولید روزانه
-    sales_logs = []      # گزارش فروش
-    purchase_logs = []   # گزارش خریدهای کارگاه
+    inventory_data = {}
+    production_logs = []
+    sales_logs = []
+    purchase_logs = []
 
-    # ---------------------------------------------------------
-    # بخش ۱: تولید روزانه
-    # ---------------------------------------------------------
+    # ۱. بخش تولید روزانه
     prod_name = ft.TextField(label="نوع محصول تولید شده", width=310, height=48)
     prod_maker = ft.Dropdown(
         label="کی تولید کرده؟",
@@ -43,13 +39,9 @@ def main(page: ft.Page):
                 maker = prod_maker.value
                 date = prod_date.value
 
-                # اضافه به انبار
                 inventory_data[item] = inventory_data.get(item, 0) + qty
-                
-                # ثبت در گزارش
                 production_logs.append({"item": item, "maker": maker, "qty": qty, "date": date})
 
-                # بروزرسانی لیست نمایش تولید
                 prod_list_ui.controls.insert(0, 
                     ft.Container(
                         content=ft.Row([
@@ -78,9 +70,7 @@ def main(page: ft.Page):
         prod_list_ui
     ], horizontal_alignment="center")
 
-    # ---------------------------------------------------------
-    # بخش ۲: انبار تولید
-    # ---------------------------------------------------------
+    # ۲. انبار تولید
     inventory_list_ui = ft.Column()
 
     def update_inventory_ui():
@@ -105,9 +95,7 @@ def main(page: ft.Page):
         inventory_list_ui
     ], horizontal_alignment="center")
 
-    # ---------------------------------------------------------
-    # بخش ۳ و ۶: فروش و پرینت فاکتور
-    # ---------------------------------------------------------
+    # ۳. فروش و فاکتور
     sale_customer = ft.TextField(label="نام مشتری", width=310, height=48)
     sale_item = ft.TextField(label="نام کالا", width=310, height=48)
     sale_qty = ft.TextField(label="تعداد", width=310, height=48, keyboard_type="number")
@@ -134,9 +122,7 @@ def main(page: ft.Page):
                 customer = sale_customer.value
                 p_type = sale_payment_type.value
 
-                # کسر از انبار
                 inventory_data[item] = inventory_data.get(item, 0) - qty
-
                 sales_logs.append({"customer": customer, "item": item, "qty": qty, "price": price, "type": p_type, "date": datetime.now().strftime("%Y/%m/%d")})
 
                 sales_list_ui.controls.insert(0,
@@ -160,7 +146,6 @@ def main(page: ft.Page):
     def print_invoice_dialog(e):
         if not sales_logs:
             return
-        
         last_sale = sales_logs[0]
         
         def close_dialog(e):
@@ -199,9 +184,7 @@ def main(page: ft.Page):
         sales_list_ui
     ], horizontal_alignment="center")
 
-    # ---------------------------------------------------------
-    # بخش ۴: خرید کارگاه
-    # ---------------------------------------------------------
+    # ۴. خرید کارگاه
     purchaser = ft.Dropdown(
         label="خریدار",
         width=310,
@@ -226,7 +209,6 @@ def main(page: ft.Page):
                 date = purchase_date.value
 
                 purchase_logs.append({"buyer": buyer, "item": item, "cost": cost, "date": date})
-
                 purchase_list_ui.controls.insert(0,
                     ft.Container(
                         content=ft.Row([
@@ -254,18 +236,13 @@ def main(page: ft.Page):
         purchase_list_ui
     ], horizontal_alignment="center")
 
-    # ---------------------------------------------------------
-    # بخش ۵: نمودارها و گزارشات ماهانه
-    # ---------------------------------------------------------
+    # ۵. گزارشات
     analytics_ui = ft.Column()
 
     def update_analytics_ui():
         analytics_ui.controls.clear()
-        
         total_sales = sum(s["price"] for s in sales_logs)
         total_purchases = sum(p["cost"] for p in purchase_logs)
-        
-        # آمار سازنده‌ها
         hussein_prod = sum(p["qty"] for p in production_logs if p["maker"] == "حسین")
         mohammad_prod = sum(p["qty"] for p in production_logs if p["maker"] == "محمد")
         cnc_prod = sum(p["qty"] for p in production_logs if p["maker"] == "CNC")
@@ -273,7 +250,7 @@ def main(page: ft.Page):
         analytics_ui.controls.extend([
             ft.Container(
                 content=ft.Column([
-                    ft.Text("خلاصه عملکرد مالی ماهانه", weight="bold", color="white"),
+                    ft.Text("خلاصه عملکرد مالی کارگاه", weight="bold", color="white"),
                     ft.Text(f"مجموع فروش: {total_sales:,} تومان", color="white"),
                     ft.Text(f"مجموع خرید کارگاه: {total_purchases:,} تومان", color="white"),
                     ft.Text(f"سود ناخالص: {total_sales - total_purchases:,} تومان", weight="bold", color="yellow")
@@ -281,7 +258,7 @@ def main(page: ft.Page):
                 padding=12, bgcolor="blueGrey800", border_radius=10, width=310
             ),
             ft.Divider(),
-            ft.Text("گزارش سهم تولید استادکاران:", weight="bold"),
+            ft.Text("گزارش میزان تولید:", weight="bold"),
             ft.Text(f"🔨 تولید حسین: {hussein_prod} عدد"),
             ft.Text(f"🔨 تولید محمد: {mohammad_prod} عدد"),
             ft.Text(f"⚙️ تولید دستگاه CNC: {cnc_prod} عدد"),
@@ -293,13 +270,10 @@ def main(page: ft.Page):
         analytics_ui
     ], horizontal_alignment="center")
 
-    # مقداردهی اولیه انبار و گزارشات
     update_inventory_ui()
     update_analytics_ui()
 
-    # ---------------------------------------------------------
-    # ایجاد تب‌های اصلی برنامه (استفاده از label به جای text)
-    # ---------------------------------------------------------
+    # ایجاد ساختار اصلی تب‌ها بدون هیچ‌گونه پارامتر غیرمجاز
     tabs = ft.Tabs(
         selected_index=0,
         tabs=[
